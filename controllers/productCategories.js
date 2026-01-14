@@ -2,7 +2,7 @@ import db from "../config/db.js";
 
 // menampilkan data
 export const getCategories = (req, res) => {
-    db.query('SELECT * FROM categories', (err, results) => {
+    db.query('SELECT * FROM product_categories', (err, results) => {
 
         // jika ada error
         if (err) {
@@ -17,9 +17,9 @@ export const getCategories = (req, res) => {
 
 // insert data
 export const saveCategory = (req, res) => {
-  const { name } = req.body;
+  const { category_id, category } = req.body;
 
-  db.query("INSERT INTO categories (name) VALUES (?)", [name], (err, results) => {
+  db.query("INSERT INTO product_categories (category_id, category) VALUES (?, ?)", [category_id, category], (err, results) => {
 
     // jika ada err
       if (err) {
@@ -29,7 +29,8 @@ export const saveCategory = (req, res) => {
     // jika tidak ada err
       res.status(201).json({
         id: results.insertId,
-        name: name
+        category_id: category_id,
+        category: category,
       });
     }
   );
@@ -38,9 +39,9 @@ export const saveCategory = (req, res) => {
 // show data by id
 //sql? SELECT * FROM users WHERE id = ?
 export const getCategoryById = (req, res) => {
-    const {id} = req.params;
+    const {category_id} = req.params;
 
-    db.query('SELECT * FROM categories WHERE id = ?', [id], (err, results) => {
+    db.query('SELECT * FROM product_categories WHERE category_id = ?', [category_id], (err, results) => {
 
         // jika ada err
         if (err) {
@@ -59,10 +60,11 @@ export const getCategoryById = (req, res) => {
 
 // update data
 export const updateCategory = (req, res) => {
-    const { id } = req.params;
-    const { name } = req.body;
+    const { category_id} = req.params;
+    const { category } = req.body;
 
-    db.query("UPDATE categories SET name = ? WHERE id = ?", [name, id], (err, results) => {
+    db.query("UPDATE product_categories SET category = ? WHERE category_id = ?",
+ [category, category_id], (err, results) => {
 
         // jika ada err
         if (err) {
@@ -76,9 +78,9 @@ export const updateCategory = (req, res) => {
 
 // delete data
 export const deleteCategory = (req, res) => {
-    const {id} = req.params;
+    const {category_id} = req.params;
 
-    db.query('DELETE FROM categories WHERE id = ?', [id], (err, results) => {
+    db.query('DELETE FROM product_categories WHERE category_id = ?', [category_id], (err, results) => {
 
         // jika ada err
         if (err) {
@@ -89,3 +91,18 @@ export const deleteCategory = (req, res) => {
         res.json({message: "Data Berhasil Di Hapus"});
     }); 
 }
+
+//sql = SELECT * FROM products WHERE category_id = ?
+export const productByCategory = (req, res) => {
+    db.query("SELECT * FROM products WHERE category_id = ?",
+    [req.params.category_id], (err, results) => {
+
+        // jika ada err
+        if (err) {
+            return  res.status(500).json({ message: err });
+        }
+
+        // jika tidak ada err
+        res.json(results);
+    });
+};
