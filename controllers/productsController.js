@@ -1,8 +1,6 @@
 import db from "../config/db.js";
 
-/* =========================
-   GET ALL PRODUCTS
-========================= */
+//menampilkan data
 export const getProducts = (req, res) => {
   db.query(
     `SELECT 
@@ -22,9 +20,8 @@ export const getProducts = (req, res) => {
   );
 };
 
-/* =========================
-   INSERT PRODUCT + IMAGE
-========================= */
+
+// insert data
 export const saveProducts = (req, res) => {
   const {
     product_name,
@@ -89,9 +86,8 @@ export const saveProducts = (req, res) => {
   );
 };
 
-/* =========================
-   GET PRODUCT BY ID
-========================= */
+
+// show data by id
 export const getProductsById = (req, res) => {
   const { product_id } = req.params;
 
@@ -123,9 +119,8 @@ export const getProductsById = (req, res) => {
   });
 };
 
-/* =========================
-   UPDATE PRODUCT
-========================= */
+
+// update data
 export const updateProducts = (req, res) => {
   const { product_id } = req.params;
   const {
@@ -185,9 +180,7 @@ export const updateProducts = (req, res) => {
 };
 
 
-/* =========================
-   DELETE PRODUCT
-========================= */
+// delete data
 export const deleteProducts = (req, res) => {
   const { product_id } = req.params;
 
