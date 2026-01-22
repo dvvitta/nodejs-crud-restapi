@@ -92,6 +92,7 @@ export const deleteCategory = (req, res) => {
     }); 
 }
 
+// show data by category_id
 //sql = SELECT * FROM products WHERE category_id = ?
 export const productByCategory = (req, res) => {
     db.query("SELECT * FROM products WHERE category_id = ?",

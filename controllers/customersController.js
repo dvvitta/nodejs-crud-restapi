@@ -108,7 +108,7 @@ export const updateCustomers = (req, res) => {
             EMAIL = ?,
             GENDER_ID = ?,
             UPDATED_AT = NOW()
-        WHERE CUST_ID = ?
+            WHERE CUST_ID = ?
     `;
 
   db.query(

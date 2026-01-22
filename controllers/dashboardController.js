@@ -18,7 +18,7 @@ export const getTopProductsPreviousYear = (req, res) => {
         GROUP BY od.product_id
     ) t ON p.product_id = t.product_id
     ORDER BY t.total_terjual DESC
-    LIMIT 5
+    LIMIT 1
   `;
 
   db.query(sql, (err, results) => {
@@ -54,7 +54,7 @@ export const getTopCustomersPreviousYear = (req, res) => {
         GROUP BY o.CUST_ID
     ) t ON c.CUST_ID = t.CUST_ID
     ORDER BY t.total_order DESC
-    LIMIT 5
+    LIMIT 1
   `;
 
   db.query(sql, (err, results) => {
@@ -92,7 +92,7 @@ export const getTopCustomersByOrderValuePreviousYear = (req, res) => {
         GROUP BY o.CUST_ID
     ) t ON c.CUST_ID = t.CUST_ID
     ORDER BY t.total_belanja DESC
-    LIMIT 5
+    LIMIT 1
   `;
 
   db.query(sql, (err, results) => {
@@ -131,7 +131,7 @@ export const getTopCustomersByItemPreviousYear = (req, res) => {
         GROUP BY o.CUST_ID
     ) t ON c.CUST_ID = t.CUST_ID
     ORDER BY t.total_item DESC
-    LIMIT 5
+    LIMIT 1
   `;
 
   db.query(sql, (err, results) => {
