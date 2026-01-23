@@ -207,7 +207,11 @@ export const getMonthlySalesPreviousYearPerProduct = (req, res) => {
       SUM(CASE WHEN MONTH(o.order_date) = 9  THEN od.qty * od.price ELSE 0 END) AS September,
       SUM(CASE WHEN MONTH(o.order_date) = 10 THEN od.qty * od.price ELSE 0 END) AS October,
       SUM(CASE WHEN MONTH(o.order_date) = 11 THEN od.qty * od.price ELSE 0 END) AS November,
-      SUM(CASE WHEN MONTH(o.order_date) = 12 THEN od.qty * od.price ELSE 0 END) AS December
+      SUM(CASE WHEN MONTH(o.order_date) = 12 THEN od.qty * od.price ELSE 0 END) AS December,
+
+      -- TOTAL PENDAPATAN SETAHUN
+      SUM(od.qty * od.price) AS total_sales
+
     FROM order_details od
     JOIN orders o   ON od.order_id = o.order_id
     JOIN products p ON od.product_id = p.product_id
@@ -224,6 +228,7 @@ export const getMonthlySalesPreviousYearPerProduct = (req, res) => {
     res.status(200).json(results);
   });
 };
+
 
 
 // 7. Menampilkan jumlah penjualan pada tahun sebelumnya untuk setiap produk
@@ -242,7 +247,11 @@ export const getMonthlyProductSalesQtyPreviousYear = (req, res) => {
       SUM(CASE WHEN MONTH(o.order_date) = 9  THEN od.qty ELSE 0 END) AS September,
       SUM(CASE WHEN MONTH(o.order_date) = 10 THEN od.qty ELSE 0 END) AS Oktober,
       SUM(CASE WHEN MONTH(o.order_date) = 11 THEN od.qty ELSE 0 END) AS November,
-      SUM(CASE WHEN MONTH(o.order_date) = 12 THEN od.qty ELSE 0 END) AS Desember
+      SUM(CASE WHEN MONTH(o.order_date) = 12 THEN od.qty ELSE 0 END) AS Desember,
+
+      -- TOTAL PENDAPATAN SETAHUN
+      SUM(od.qty * od.price) AS total_sales
+
     FROM order_details od
     JOIN orders o   ON od.order_id = o.order_id
     JOIN products p ON od.product_id = p.product_id
@@ -260,21 +269,24 @@ export const getMonthlyProductSalesQtyPreviousYear = (req, res) => {
   });
 };
 
-// 8. Jumlah order bulanan di tahun sebelumnya untuk setiap customer
+/// 8. Jumlah order bulanan + total pendapatan tahun sebelumnya per customer
 export const getMonthlyOrdersPerCustomerPreviousYear = (req, res) => {
   const sql = `
     SELECT
         c.cust_name,
         t.bulan,
-        t.jumlah_order
+        t.jumlah_order,
+        t.total_pendapatan
     FROM customers c
     JOIN (
         SELECT
             o.cust_id,
             MONTH(o.order_date) AS bulan_angka,
             MONTHNAME(o.order_date) AS bulan,
-            COUNT(o.order_id) AS jumlah_order
+            COUNT(DISTINCT o.order_id) AS jumlah_order,
+            SUM(od.qty * od.price) AS total_pendapatan
         FROM orders o
+        JOIN order_details od ON o.order_id = od.order_id
         WHERE YEAR(o.order_date) = YEAR(CURDATE()) - 1
         GROUP BY o.cust_id, MONTH(o.order_date)
     ) t ON c.cust_id = t.cust_id
@@ -289,6 +301,7 @@ export const getMonthlyOrdersPerCustomerPreviousYear = (req, res) => {
     res.status(200).json(results);
   });
 };
+
 
 
 
